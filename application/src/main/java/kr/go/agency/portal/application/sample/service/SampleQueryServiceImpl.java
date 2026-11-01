@@ -9,18 +9,15 @@ import kr.go.agency.portal.application.sample.port.in.GetSampleService;
 import kr.go.agency.portal.application.sample.port.in.SearchSampleService;
 import kr.go.agency.portal.application.sample.port.out.LoadSamplePort;
 import kr.go.agency.portal.application.sample.port.out.SearchSamplePort;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class SampleQueryServiceImpl implements GetSampleService, SearchSampleService {
 
     private final LoadSamplePort loadSamplePort;
     private final SearchSamplePort searchSamplePort;
-
-    public SampleQueryServiceImpl(LoadSamplePort loadSamplePort, SearchSamplePort searchSamplePort) {
-        this.loadSamplePort = loadSamplePort;
-        this.searchSamplePort = searchSamplePort;
-    }
 
     @Override
     public SampleResult get(Long id) {

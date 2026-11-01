@@ -7,18 +7,16 @@ import org.springframework.stereotype.Component;
 import kr.go.agency.portal.application.sample.port.out.LoadSamplePort;
 import kr.go.agency.portal.application.sample.port.out.SaveSamplePort;
 import kr.go.agency.portal.domain.sample.Sample;
+import lombok.RequiredArgsConstructor;
 
 /**
  * 쓰기·단건 조회 어댑터 (JPA).
  */
 @Component
+@RequiredArgsConstructor
 class SamplePersistenceAdapter implements SaveSamplePort, LoadSamplePort {
 
     private final SampleJpaRepository repository;
-
-    SamplePersistenceAdapter(SampleJpaRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public Sample save(Sample sample) {

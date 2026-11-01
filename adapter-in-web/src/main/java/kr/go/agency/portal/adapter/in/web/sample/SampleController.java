@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.RequiredArgsConstructor;
 import kr.go.agency.portal.adapter.in.web.common.ApiResponse;
 import kr.go.agency.portal.application.common.PageResult;
 import kr.go.agency.portal.application.sample.port.in.GetSampleService;
@@ -26,6 +27,7 @@ import kr.go.agency.portal.application.sample.port.in.SearchSampleService.Sample
 import kr.go.agency.portal.application.sample.port.in.SearchSampleService.SampleSummary;
 
 @Validated
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/samples")
 public class SampleController {
@@ -33,13 +35,6 @@ public class SampleController {
     private final RegisterSampleService registerSampleService;
     private final GetSampleService getSampleService;
     private final SearchSampleService searchSampleService;
-
-    public SampleController(RegisterSampleService registerSampleService, GetSampleService getSampleService,
-            SearchSampleService searchSampleService) {
-        this.registerSampleService = registerSampleService;
-        this.getSampleService = getSampleService;
-        this.searchSampleService = searchSampleService;
-    }
 
     @PostMapping
     public ResponseEntity<ApiResponse<Long>> register(@Valid @RequestBody RegisterSampleRequest request) {
