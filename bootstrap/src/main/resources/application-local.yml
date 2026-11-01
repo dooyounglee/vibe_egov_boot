@@ -1,0 +1,19 @@
+# 로컬 개발용: H2 인메모리 DB (Oracle 호환 모드)
+spring:
+  datasource:
+    url: jdbc:h2:mem:portal;MODE=Oracle;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      # 로컬에서만 엔티티 기준으로 테이블을 자동 생성한다
+      ddl-auto: create
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+logging:
+  level:
+    kr.go.agency.portal: debug

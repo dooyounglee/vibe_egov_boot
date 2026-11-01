@@ -1,0 +1,8 @@
+# 개발 서버. 접속 정보는 환경변수로 주입한다 (소스에 계정·비밀번호를 두지 않음)
+# DB 드라이버(Oracle, Tibero, PostgreSQL 등)가 정해지면 bootstrap/pom.xml 에 추가
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    # driver-class-name: com.tmax.tibero.jdbc.TbDriver

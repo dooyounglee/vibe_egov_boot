@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 조회 전용: SELECT 만 작성한다 (쓰기는 JPA) -->
+<mapper namespace="kr.go.agency.portal.adapter.out.persistence.sample.mybatis.SampleQueryMapper">
+
+    <sql id="searchCondition">
+        <where>
+            <if test="keyword != null">
+                AND TITLE LIKE '%' || #{keyword} || '%'
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectSampleList"
+            resultType="kr.go.agency.portal.application.sample.port.in.SearchSampleService$SampleSummary">
+        SELECT SAMPLE_ID   AS id
+             , TITLE       AS title
+             , CREATED_AT  AS createdAt
+          FROM TB_SAMPLE
+        <include refid="searchCondition"/>
+         ORDER BY SAMPLE_ID DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectSampleCount" resultType="long">
+        SELECT COUNT(*)
+          FROM TB_SAMPLE
+        <include refid="searchCondition"/>
+    </select>
+</mapper>

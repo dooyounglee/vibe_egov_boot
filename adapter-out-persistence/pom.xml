@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>kr.go.agency</groupId>
+        <artifactId>portal</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>adapter-out-persistence</artifactId>
+    <name>portal-adapter-out-persistence</name>
+    <description>Outbound 어댑터: 쓰기·단건 조회는 JPA, 목록·검색·통계는 MyBatis</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>kr.go.agency</groupId>
+            <artifactId>application</artifactId>
+        </dependency>
+
+        <!-- 표준프레임워크 실행환경: 데이터처리 (@EgovMapper) -->
+        <dependency>
+            <groupId>org.egovframe.rte</groupId>
+            <artifactId>egovframe-rte-psl-dataaccess</artifactId>
+            <exclusions>
+                <!-- iBatis 2.x(EOL)는 사용하지 않음 -->
+                <exclusion>
+                    <groupId>org.apache.ibatis</groupId>
+                    <artifactId>ibatis-sqlmap</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+</project>

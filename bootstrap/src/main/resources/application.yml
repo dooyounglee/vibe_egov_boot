@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: portal
+  profiles:
+    default: local
+  jpa:
+    open-in-view: false
+    hibernate:
+      # 스키마는 db/ddl 스크립트로 관리한다 (DBA 수동 반영). JPA는 일치 여부만 검증
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Seoul
+
+mybatis:
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    arg-name-based-constructor-auto-mapping: true
+    jdbc-type-for-null: "NULL"
+    default-fetch-size: 100
+    default-statement-timeout: 30
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  error:
+    include-stacktrace: never
+    include-message: never
+    whitelabel:
+      enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

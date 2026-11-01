@@ -1,0 +1,11 @@
+# 운영 서버. 접속 정보는 환경변수 또는 WAS JNDI로 주입한다 (소스에 계정·비밀번호를 두지 않음)
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    # jndi-name: java:comp/env/jdbc/portal
+
+logging:
+  level:
+    root: info
