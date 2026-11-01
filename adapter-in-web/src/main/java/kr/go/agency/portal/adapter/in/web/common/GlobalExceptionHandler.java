@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Path;
 import kr.go.agency.portal.application.common.NotFoundException;
 import kr.go.agency.portal.domain.common.DomainException;
 
@@ -30,6 +32,23 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining(", "));
         return ResponseEntity.badRequest().body(ApiResponse.fail("INVALID_INPUT", message));
+    }
+
+    /** 컨트롤러 클래스의 @Validated 로 검증되는 @RequestParam·@PathVariable 제약 위반 */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleConstraintViolation(ConstraintViolationException e) {
+        String message = e.getConstraintViolations().stream()
+                .map(violation -> lastNodeName(violation.getPropertyPath()) + ": " + violation.getMessage())
+                .collect(Collectors.joining(", "));
+        return ResponseEntity.badRequest().body(ApiResponse.fail("INVALID_INPUT", message));
+    }
+
+    private static String lastNodeName(Path path) {
+        String name = null;
+        for (Path.Node node : path) {
+            name = node.getName();
+        }
+        return name;
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

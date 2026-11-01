@@ -41,5 +41,35 @@
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
+
+        <!-- 어댑터 통합 테스트: H2(Oracle 모드) + 운영 DDL(db/ddl) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <!-- 운영 DDL을 그대로 테스트 스키마로 사용해 엔티티와 일치하는지 검증한다 -->
+            <testResource>
+                <directory>${project.basedir}/../db/ddl</directory>
+                <targetPath>db/ddl</targetPath>
+            </testResource>
+        </testResources>
+    </build>
 </project>
