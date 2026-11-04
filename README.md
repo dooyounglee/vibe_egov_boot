@@ -44,7 +44,8 @@ local 실행 중 사용할 수 있는 주소:
 - `GET /api/samples/{id}` 단건 조회 (JPA)
 - `GET /api/samples?keyword=&page=1&size=10` 검색 (MyBatis)
 - `POST /api/surveys` 설문 등록 (JPA 1:N 예시) → `{"title": "...", "questions": ["...", "..."]}`
-- `GET /api/surveys/{id}` 설문 조회 (문항 포함)
+- `GET /api/surveys/{id}` 설문 조회 (문항 포함, JPA)
+- `GET /api/surveys?keyword=&page=1&size=10` 설문 검색 (문항 수 포함, MyBatis)
 - `POST /api/surveys/{id}/questions` 문항 추가 → `{"content": "..."}`
 - `DELETE /api/surveys/{id}/questions/{questionId}` 문항 삭제
 - H2 콘솔: `/h2-console` (JDBC URL `jdbc:h2:mem:portal`)

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 조회 전용: SELECT 만 작성한다 (쓰기는 JPA) -->
+<mapper namespace="kr.go.agency.portal.adapter.out.persistence.survey.mybatis.SurveyQueryMapper">
+
+    <sql id="searchCondition">
+        <where>
+            <if test="keyword != null">
+                AND S.TITLE LIKE '%' || #{keyword} || '%'
+            </if>
+        </where>
+    </sql>
+
+    <!--
+        문항 수는 스칼라 서브쿼리로 센다. JOIN + GROUP BY 와 달리 설문 행 수가 그대로라서
+        페이징(OFFSET/FETCH)이 설문 단위로 정확하게 걸린다. IX_TB_SURVEY_QUESTION_01(SURVEY_ID) 인덱스를 탄다.
+    -->
+    <select id="selectSurveyList"
+            resultType="kr.go.agency.portal.application.survey.port.in.SearchSurveyService$SurveySummary">
+        SELECT S.SURVEY_ID   AS id
+             , S.TITLE       AS title
+             , (SELECT COUNT(*)
+                  FROM TB_SURVEY_QUESTION Q
+                 WHERE Q.SURVEY_ID = S.SURVEY_ID) AS questionCount
+             , S.CREATED_AT  AS createdAt
+          FROM TB_SURVEY S
+        <include refid="searchCondition"/>
+         ORDER BY S.SURVEY_ID DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectSurveyCount" resultType="long">
+        SELECT COUNT(*)
+          FROM TB_SURVEY S
+        <include refid="searchCondition"/>
+    </select>
+</mapper>

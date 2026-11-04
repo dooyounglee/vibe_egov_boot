@@ -24,12 +24,16 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import kr.go.agency.portal.application.common.NotFoundException;
+import kr.go.agency.portal.application.common.PageResult;
 import kr.go.agency.portal.application.survey.port.in.ChangeSurveyQuestionService;
 import kr.go.agency.portal.application.survey.port.in.GetSurveyService;
 import kr.go.agency.portal.application.survey.port.in.GetSurveyService.QuestionResult;
 import kr.go.agency.portal.application.survey.port.in.GetSurveyService.SurveyResult;
 import kr.go.agency.portal.application.survey.port.in.RegisterSurveyService;
 import kr.go.agency.portal.application.survey.port.in.RegisterSurveyService.RegisterSurveyCommand;
+import kr.go.agency.portal.application.survey.port.in.SearchSurveyService;
+import kr.go.agency.portal.application.survey.port.in.SearchSurveyService.SurveySearchCondition;
+import kr.go.agency.portal.application.survey.port.in.SearchSurveyService.SurveySummary;
 import kr.go.agency.portal.domain.common.DomainException;
 
 /**
@@ -49,6 +53,23 @@ class SurveyControllerTest {
 
     @MockitoBean
     GetSurveyService getSurveyService;
+
+    @MockitoBean
+    SearchSurveyService searchSurveyService;
+
+    @Test
+    void 검색_파라미터를_조건으로_넘기고_문항_수를_포함한_페이지를_응답한다() throws Exception {
+        given(searchSurveyService.search(any())).willReturn(new PageResult<>(
+                List.of(new SurveySummary(3L, "만족도 조사", 2L, LocalDateTime.of(2026, 11, 1, 9, 0))), 11, 2, 10));
+
+        mockMvc.perform(get("/api/surveys").param("keyword", " 만족도 ").param("page", "2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.totalCount").value(11))
+                .andExpect(jsonPath("$.data.items[0].title").value("만족도 조사"))
+                .andExpect(jsonPath("$.data.items[0].questionCount").value(2));
+
+        verify(searchSurveyService).search(new SurveySearchCondition("만족도", 2, 10));
+    }
 
     @Test
     void 문항과_함께_등록하면_201과_Location을_돌려준다() throws Exception {

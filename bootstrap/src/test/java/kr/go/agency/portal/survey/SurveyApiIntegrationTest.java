@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.jayway.jsonpath.JsonPath;
 
 /**
- * Web -> Service -> JPA(1:N) 전체 흐름을 local(H2) 프로파일로 검증한다.
+ * Web -> Service -> JPA(1:N 등록·변경·단건 조회) / MyBatis(목록) 전체 흐름을 local(H2) 프로파일로 검증한다.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -30,7 +30,7 @@ class SurveyApiIntegrationTest {
         String location = mockMvc.perform(post("/api/surveys")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"title": "만족도 조사", "questions": ["첫 번째", "두 번째"]}
+                                {"title": "통합테스트 설문", "questions": ["첫 번째", "두 번째"]}
                                 """))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getHeader("Location");
@@ -54,6 +54,12 @@ class SurveyApiIntegrationTest {
                 .andExpect(jsonPath("$.data.questions.length()").value(2))
                 .andExpect(jsonPath("$.data.questions[0].content").value("두 번째"))
                 .andExpect(jsonPath("$.data.questions[1].content").value("세 번째"));
+
+        // JPA로 쓴 결과를 MyBatis 목록 조회(문항 수 집계)로 확인
+        mockMvc.perform(get("/api/surveys").param("keyword", "통합테스트 설문"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.totalCount").value(1))
+                .andExpect(jsonPath("$.data.items[0].questionCount").value(2));
     }
 
     @Test
