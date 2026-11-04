@@ -47,12 +47,11 @@ public final class Survey {
         questions.add(SurveyQuestion.create(content));
     }
 
-    /** @param index 0부터 시작하는 문항 위치 */
-    public void removeQuestion(int index) {
-        if (index < 0 || index >= questions.size()) {
-            throw new DomainException("존재하지 않는 문항입니다.");
+    public void removeQuestion(Long questionId) {
+        boolean removed = questionId != null && questions.removeIf(q -> questionId.equals(q.getId()));
+        if (!removed) {
+            throw new DomainException("존재하지 않는 문항입니다. questionId=" + questionId);
         }
-        questions.remove(index);
     }
 
     public void changeTitle(String title) {

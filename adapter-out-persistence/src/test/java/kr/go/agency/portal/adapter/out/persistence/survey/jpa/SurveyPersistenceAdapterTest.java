@@ -51,9 +51,10 @@ class SurveyPersistenceAdapterTest {
     void 문항을_삭제하고_추가하면_DB에도_반영된다() {
         Survey survey = adapter.save(surveyWith("첫 번째", "두 번째"));
         flushAndClear();
+        Long removedQuestionId = survey.getQuestions().get(0).getId();
         Long keptQuestionId = survey.getQuestions().get(1).getId();
 
-        survey.removeQuestion(0);
+        survey.removeQuestion(removedQuestionId);
         survey.addQuestion("새 문항");
         adapter.save(survey);
         flushAndClear();
